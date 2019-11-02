@@ -32,3 +32,8 @@
 .col { 
   flex-direction: column;
 }
+
+.divider {
+  width: 20px;
+  height: 100%;
+}

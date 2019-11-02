@@ -1,25 +1,16 @@
 import React from 'react';
-import ClockNumber, { NUMBERS } from './components/ClockNumber';
+import DigitalClock from './components/DigitalClock';
+import NumberGrid from './components/NumberGrid';
+import StopWatch from './components/StopWatch';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="row">
-          <ClockNumber number={NUMBERS.ZERO}/>
-          <ClockNumber number={NUMBERS.ONE}/>
-          <ClockNumber number={NUMBERS.TWO}/>
-          <ClockNumber number={NUMBERS.THREE}/>
-          <ClockNumber number={NUMBERS.FOUR}/>
-        </div>
-        <div className="row">
-          <ClockNumber number={NUMBERS.FIVE}/>
-          <ClockNumber number={NUMBERS.SIX}/>
-          <ClockNumber number={NUMBERS.SEVEN}/>
-          <ClockNumber number={NUMBERS.EIGHT}/>
-          <ClockNumber number={NUMBERS.NINE}/>
-        </div>
+        {/* <StopWatch /> */}
+        {/* <NumberGrid /> */}
+        <DigitalClock />
       </header>
     </div>
   );

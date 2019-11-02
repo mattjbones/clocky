@@ -12,26 +12,29 @@ function getRandomStartingAngle(){
     return parseInt(Math.random() * 360, 10);
 }
 
-function getIncrementValue(angle, targetAngle) {
+function getIncrementValue(angle, targetAngle, speed=8) {
    if(angle === targetAngle){
        return angle;
-   } else { 
-       return resetAngle(angle + 1);
+   } else if(angle + speed > targetAngle && angle - speed < targetAngle) {
+       return targetAngle;
+   } else {
+       return resetAngle(angle + speed);
    }
 }
 
-function Clock ({targetAngle}) {
+function SubClock ({targetAngle}) {
     const [angle, setAngle] = useState({
         hour: getRandomStartingAngle(), 
         minute: getRandomStartingAngle()
     });
 
     useEffect(()=> {
-        requestAnimationFrame(()=>{
+        setTimeout(()=>{
             const { hour, minute } = angle;
             const { hour: targetHour, minute: targetMinute } = targetAngle;
             setAngle({hour: getIncrementValue(hour, targetHour), minute: getIncrementValue(minute, targetMinute)});
-        });
+
+        }, 1)
     }, [angle, targetAngle]);
 
     return (
@@ -43,4 +46,4 @@ function Clock ({targetAngle}) {
     );
 }
 
-export default Clock;
+export default SubClock;
