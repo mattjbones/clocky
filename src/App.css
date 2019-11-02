@@ -20,3 +20,15 @@
 .App-link {
   color: #09d3ac;
 }
+
+.row, .col { 
+  display: flex;
+}
+
+.row { 
+  flex-direction: row;
+}
+
+.col { 
+  flex-direction: column;
+}

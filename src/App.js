@@ -1,15 +1,25 @@
 import React from 'react';
-import Clock from './components/Clock';
+import ClockNumber, { NUMBERS } from './components/ClockNumber';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Clock targetAngle={{hour: 340, minutes: 100}}/>
-        <Clock targetAngle={{hour: 90, minutes: 160}}/>
-        <Clock targetAngle={{hour: 240, minutes: 80}}/>
-        <Clock targetAngle={{hour: 40, minutes: 9}}/>
+        <div className="row">
+          <ClockNumber number={NUMBERS.ZERO}/>
+          <ClockNumber number={NUMBERS.ONE}/>
+          <ClockNumber number={NUMBERS.TWO}/>
+          <ClockNumber number={NUMBERS.THREE}/>
+          <ClockNumber number={NUMBERS.FOUR}/>
+        </div>
+        <div className="row">
+          <ClockNumber number={NUMBERS.FIVE}/>
+          <ClockNumber number={NUMBERS.SIX}/>
+          <ClockNumber number={NUMBERS.SEVEN}/>
+          <ClockNumber number={NUMBERS.EIGHT}/>
+          <ClockNumber number={NUMBERS.NINE}/>
+        </div>
       </header>
     </div>
   );
