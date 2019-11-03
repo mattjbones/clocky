@@ -18,7 +18,6 @@ function DigitalClock() {
                 console.log('starting');
             }else {
                 setStateTime(null);
-                setTimeParts(zeroTimeParts);
             }
         }
         document.body.addEventListener('click', onTimerToggle);

@@ -22,9 +22,12 @@ function App() {
   useEffect(()=>{
     const updateType = () => {
       const type = parseUrlForType() || TYPES.DigitalClock;
+      console.log({hash: document.location.hash});
+      console.log({type})
       setType(type);
     }
     window.addEventListener('hashchange', updateType);
+    updateType();
     return () => window.removeEventListener('hashchange', updateType);
   }, []);
 
@@ -55,7 +58,7 @@ function _renderClockType(type) {
 }
 
 function _renderNavigationMenu(activeType) {
-  return <div className="App-navbar row">
+  return <div className="App-navbar row" key={activeType}>
     {
       Object.keys(TYPES).map(type=>
         _renderNavigationItem(TYPES[type], type, activeType)
