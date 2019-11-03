@@ -22,8 +22,6 @@ function App() {
   useEffect(()=>{
     const updateType = () => {
       const type = parseUrlForType() || TYPES.DigitalClock;
-      console.log({hash: document.location.hash});
-      console.log({type})
       setType(type);
     }
     window.addEventListener('hashchange', updateType);

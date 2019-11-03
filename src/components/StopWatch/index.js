@@ -15,7 +15,6 @@ function DigitalClock() {
             if(!startTime){
                 setTimeParts(zeroTimeParts);
                 setStateTime(new Date());
-                console.log('starting');
             }else {
                 setStateTime(null);
             }

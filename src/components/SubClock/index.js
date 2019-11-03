@@ -36,7 +36,7 @@ function SubClock ({targetAngle}) {
             const { hour, minute } = angle;
             const { hour: targetHour, minute: targetMinute } = targetAngle;
             setAngle({hour: getIncrementValue(hour, targetHour, speed), minute: getIncrementValue(minute, targetMinute, speed)});
-        }, 1)
+        })
         return () => cancelAnimationFrame(increment);
     }, [angle, targetAngle, speed]);
 
