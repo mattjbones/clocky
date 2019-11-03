@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import DigitalClock from './components/DigitalClock';
 import NumberGrid from './components/NumberGrid';
 import StopWatch from './components/StopWatch';
@@ -11,14 +11,27 @@ const TYPES = {
 };
 
 function parseUrlForType(){
-  const { pathname } = document.location;
-  const pathParts = pathname.split('/');
-  return pathParts[pathParts.length -1].toLowerCase();
+  const { hash } = document.location;
+  const hashparts = hash.split('#');
+  return hashparts[hashparts.length -1].toLowerCase();
 }
 
 function App() {
-  const type = parseUrlForType() || TYPES.DigitalClock;
-  console.log({type});
+  const [ type, setType ] = useState(TYPES.DigitalClock);
+
+  useEffect(()=>{
+    const updateType = () => {
+      const type = parseUrlForType() || TYPES.DigitalClock;
+      setType(type);
+    }
+    window.addEventListener('hashchange', updateType);
+    return () => window.removeEventListener('hashchange', updateType);
+  }, []);
+
+  useEffect(()=>{
+    document.title = `Clock ･ ${type}`;
+  }, [type]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -53,7 +66,7 @@ function _renderNavigationMenu(activeType) {
 
 function _renderNavigationItem(path, label, activePath){
   const isActive = path === activePath; 
-  return <a className={isActive ? "active" : ""} href={path}>{label}</a>
+  return <a key={path} className={isActive ? "active" : ""} href={`#${path}`}>{label}</a>
 }
 
 export default App;

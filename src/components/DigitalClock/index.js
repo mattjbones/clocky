@@ -8,7 +8,7 @@ import { VelocityContext } from '../../utils/velocityContext';
 function DigitalClock() {
     const [timeParts, setTimeParts] = useState(getTimePartsFromTime(new Date()));
     useEffect(() => {
-        setTimeout(()=>{
+        const tick = setTimeout(()=>{
             const { date } = timeParts;
             const currentDate = new Date();
             const hoursChanged = currentDate.getHours() !== date.getHours();
@@ -17,6 +17,7 @@ function DigitalClock() {
                 setTimeParts(getTimePartsFromTime(currentDate));
             }
         }, 1000);
+        return () => clearTimeout(tick);
     }, [timeParts]) 
     return (
         <VelocityContext.Provider value={{speed: 2}}>

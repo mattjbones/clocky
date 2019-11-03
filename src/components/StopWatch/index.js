@@ -26,17 +26,19 @@ function DigitalClock() {
     }, [startTime]);
 
     useEffect(() => {
-        requestAnimationFrame(()=>{
+        const tick = requestAnimationFrame(()=>{
             if(startTime){
                 const currentDate = new Date();
                 const diffInMillis = Math.abs(currentDate.getTime() - startTime.getTime());
-                const diffSeconds = diffInMillis / 1000;
-                const diffMinutes = diffSeconds >= 60 ? diffSeconds / 60 : 0;
+                const diffInSeconds = diffInMillis / 1000;
+                const diffSeconds =  diffInSeconds % 60;
+                const diffMinutes = diffInSeconds >= 60 ? diffInSeconds / 60 : 0;
                 const diffHours = diffMinutes >= 60 ? diffMinutes / 60 : 0;
                 const timeParts = getTimePartsFromDateParts(diffHours, diffMinutes, diffSeconds);
                 setTimeParts(timeParts);
             }
         });
+        return () => cancelAnimationFrame(tick);
     }, [timeParts, startTime]);
 
     return (
