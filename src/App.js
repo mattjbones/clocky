@@ -38,6 +38,10 @@ function App() {
       <header className="App-header">
         {_renderClockType(type)}
         {_renderNavigationMenu(type)}
+        <div className="too-small">
+          <p>The screen is too narrow to show the clock.</p>
+          <p>Try rotating your device or resizing the window.</p>
+        </div>
       </header>
     </div>
   );
