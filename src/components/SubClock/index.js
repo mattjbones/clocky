@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { VelocityContext } from '../../utils/velocityContext';
 import './clock.css';
 
 
@@ -12,7 +13,7 @@ function getRandomStartingAngle(){
     return parseInt(Math.random() * 360, 10);
 }
 
-function getIncrementValue(angle, targetAngle, speed=8) {
+function getIncrementValue(angle, targetAngle, speed) {
    if(angle === targetAngle){
        return angle;
    } else if(angle + speed > targetAngle && angle - speed < targetAngle) {
@@ -28,14 +29,16 @@ function SubClock ({targetAngle}) {
         minute: getRandomStartingAngle()
     });
 
+    const { speed } = useContext(VelocityContext);
+
     useEffect(()=> {
-        setTimeout(()=>{
+        const increment = requestAnimationFrame(()=>{
             const { hour, minute } = angle;
             const { hour: targetHour, minute: targetMinute } = targetAngle;
-            setAngle({hour: getIncrementValue(hour, targetHour), minute: getIncrementValue(minute, targetMinute)});
-
+            setAngle({hour: getIncrementValue(hour, targetHour, speed), minute: getIncrementValue(minute, targetMinute, speed)});
         }, 1)
-    }, [angle, targetAngle]);
+        return () => cancelAnimationFrame(increment);
+    }, [angle, targetAngle, speed]);
 
     return (
         <div className="clock clock-body">

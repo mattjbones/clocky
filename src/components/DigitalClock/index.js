@@ -3,6 +3,7 @@ import ClockNumber, { NUMBERS } from '../ClockNumber';
 import SubClock from '../SubClock';
 import { emptySpace } from '../../utils/clockPositions';
 import { getTimePartsFromTime } from '../../utils/timeParts';
+import { VelocityContext } from '../../utils/velocityContext';
 
 function DigitalClock() {
     const [timeParts, setTimeParts] = useState(getTimePartsFromTime(new Date()));
@@ -17,11 +18,15 @@ function DigitalClock() {
             }
         }, 1000);
     }, [timeParts]) 
-    return <div className="row">
-        {_renderRow(timeParts.hour)}
-        {_renderDivider()}
-        {_renderRow(timeParts.minute)}
-    </div>;
+    return (
+        <VelocityContext.Provider value={{speed: 2}}>
+            <div className="row">
+                {_renderRow(timeParts.hour)}
+                {_renderDivider()}
+                {_renderRow(timeParts.minute)}
+            </div>
+        </VelocityContext.Provider>
+    );
 }
 
 function _renderRow(timePart){

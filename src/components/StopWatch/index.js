@@ -3,6 +3,8 @@ import ClockNumber, { NUMBERS } from '../ClockNumber';
 import SubClock from '../SubClock';
 import { emptySpace } from '../../utils/clockPositions';
 import { zeroTimeParts, getTimePartsFromDateParts } from '../../utils/timeParts';
+import { VelocityContext } from '../../utils/velocityContext';
+import './stopwatch.css';
 
 function DigitalClock() {
     const [timeParts, setTimeParts] = useState(zeroTimeParts);
@@ -37,11 +39,18 @@ function DigitalClock() {
         });
     }, [timeParts, startTime]);
 
-    return <div className="row">
-        {_renderRow(timeParts.minute)}
-        {_renderDivider()}
-        {_renderRow(timeParts.second)}
-    </div>;
+    return (
+        <VelocityContext.Provider value={{speed: 12}}>
+            <div className="Stopwatch-help">
+                Click anywhere to start / stop / reset.
+            </div>
+            <div className="row">
+                {_renderRow(timeParts.minute)}
+                {_renderDivider()}
+                {_renderRow(timeParts.second)}
+            </div>
+        </VelocityContext.Provider>
+    );
 }
 
 function _renderRow(timePart){

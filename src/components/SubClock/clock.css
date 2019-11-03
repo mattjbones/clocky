@@ -4,6 +4,7 @@
 }
 
 .clock-body {
+    margin: 2px;
     background-color: white;
     width: 100px;
     height: 100px;   
@@ -28,6 +29,8 @@
 }
 
 .clock-hand-hour {
+    height: 40px;
+    margin-top: 10px;
     transform-origin: bottom;
 }
 

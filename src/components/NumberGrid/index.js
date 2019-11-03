@@ -1,9 +1,10 @@
 import React from 'react';
 import ClockNumber, { NUMBERS } from '../ClockNumber';
+import { VelocityContext } from '../../utils/velocityContext';
 
 function NumberGrid() {
   return (
-      <React.Fragment>
+      <VelocityContext.Provider value={{speed: 4}}>
           <div className="row">
             <ClockNumber number={NUMBERS[0]}/>
             <ClockNumber number={NUMBERS[1]}/>
@@ -18,7 +19,7 @@ function NumberGrid() {
             <ClockNumber number={NUMBERS[8]}/>
             <ClockNumber number={NUMBERS[9]}/>
           </div>
-      </React.Fragment>
+      </VelocityContext.Provider>
     );
 }
 
