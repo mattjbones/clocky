@@ -1,0 +1,356 @@
+<html>
+
+<head>
+  <title>Word Clock</title>
+  <meta name="theme-color" content="#362417ff" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#92817aff" media="(prefers-color-scheme: light)">
+  <style>
+    :root {
+      --black: #000500ff;
+      --almond: #f1dabfff;
+      --cinereous: #92817aff;
+      --bistre: #362417ff;
+      --snow: #fffbffff;
+    }
+
+    @media(prefers-color-scheme: dark) {
+      :root {
+        --background-color: var(--black);
+        --text-color: var(--almond);
+        --inactive-text-color: var(--bistre);
+        --shadow-text-color: var(--cinereous);
+      }
+    }
+
+    @media(prefers-color-scheme: light) {
+      :root {
+        --background-color: var(--snow);
+        --text-color: var(--bistre);
+        --inactive-text-color: var(--almond);
+        --shadow-text-color: var(--black);
+      }
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .clock-container {
+      display: flex;
+      width: 80%;
+      /* would love this to be a container query tho */
+      font-size: calc(16px + 1.6vw + 1.2vh);
+      /* font-size: calc(16px + 1.6cqw + 1.3cqh); */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="clock-container">
+    <word-clock />
+  </div>
+
+  <template id="world-clock-template">
+    <p id="clock-face">
+      <span id="it" class="active">
+        <slot name="it">IT</slot>
+      </span>
+      <span id="is" class="active">
+        <slot name="is">IS</slot>
+      </span>
+      <span id="twenty">
+        <slot name="ten">TWENTY</slot>
+      </span>
+      <span id="five">
+        <slot name="five">FIVE</slot>
+      </span>
+      <span id="ten">
+        <slot name="ten">TEN</slot>
+      </span>
+      <span id="minutes">
+        <slot name="minutes">MINUTES</slot>
+      </span>
+      <span id="quarter">
+        <slot name="quarter">QUARTER</slot>
+      </span>
+      <span id="half">
+        <slot name="half">HALF</slot>
+      </span>
+      <span id="past">
+        <slot name="past">PAST</slot>
+      </span>
+      <span id="to">
+        <slot name="to">TO</slot>
+      </span>
+      <span id="one">
+        <slot name="one">ONE</slot>
+      </span>
+      <span id="two">
+        <slot name="two">TWO</slot>
+      </span>
+      <span id="three">
+        <slot name="three">THREE</slot>
+      </span>
+      <span id="four">
+        <slot name="four">FOUR</slot>
+      </span>
+      <span id="five-hour">
+        <slot name="five">FIVE</slot>
+      </span>
+      <span id="six">
+        <slot name="six">SIX</slot>
+      </span>
+      <span id="seven">
+        <slot name="seven">SEVEN</slot>
+      </span>
+      <span id="eight">
+        <slot name="eight">EIGHT</slot>
+      </span>
+      <span id="nine">
+        <slot name="nine">NINE</slot>
+      </span>
+      <span id="ten-hour">
+        <slot name="ten">TEN</slot>
+      </span>
+      <span id="eleven">
+        <slot name="eleven">ELEVEN</slot>
+      </span>
+      <span id="twelve">
+        <slot name="twelve">TWELVE</slot>
+      </span>
+      <span id="oclock">
+        <slot name="oclock">OCLOCK</slot>
+      </span>
+    </p>
+
+    <style>
+      p {
+        text-transform: lowercase;
+        font-size: 2em;
+        margin-bottom: 0;
+        margin-top: 0;
+        color: var(--inactive-text-color);
+      }
+
+      @media screen and (max-height: 480px),
+      screen and (max-width: 650px) {
+        p {
+          font-size: 1.2em;
+        }
+      }
+
+      .active {
+        color: var(--text-color);
+        animation: pulse 15s ease-in-out infinite reverse;
+        will-change: transform;
+      }
+
+      @media (prefers-reduced-motion) {
+        .active {
+          color: var(--text-color);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0.8;
+        }
+
+        100% {
+          opacity: 1;
+        }
+
+      }
+    </style>
+  </template>
+
+  <script>
+    class WordClock extends HTMLElement {
+
+      skippable = ["it", "is"]
+      hourIds = [
+        "twelve",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five-hour",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten-hour",
+        "eleven",
+        "twelve",
+      ];
+
+      oneMinute = 60 * 1000
+
+      connectedCallback() {
+        const template = document.getElementById('world-clock-template').content;
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        shadowRoot.appendChild(template.cloneNode(true));
+        this.setTime();
+      }
+
+      disconnectedCallback() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+      }
+
+      setActiveElement(elementName) {
+        this.shadowRoot.getElementById(elementName).classList.add("active");
+      }
+
+      setTime() {
+        const currentTime = new Date();
+        const minutes = currentTime.getMinutes();
+        const hours = currentTime.getHours();
+
+        const minuteSection = parseInt(minutes / 5, 10);
+        const clockFace = this.shadowRoot.getElementById("clock-face");
+
+        // clear existing state
+        clockFace.querySelectorAll("span").forEach((clockPart) => {
+          if (this.skippable.includes(clockPart.id)) {
+            return
+          }
+          clockPart.classList.remove("active");
+        });
+
+        const twelveHours = hours > 12 ? hours - 12 : hours;
+        const nextHour = twelveHours + 1 > 12 ? 0 : twelveHours + 1;
+
+        let ariaLabel = "it is ";
+        switch (minuteSection) {
+          case 1: {
+            //5 past
+            this.setActiveElement("five");
+            this.setActiveElement("minutes");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `five minutes past ${twelveHours}`;
+            break;
+          }
+          case 2: {
+            // 10 past 
+            this.setActiveElement("ten");
+            this.setActiveElement("minutes");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `ten minutes past ${twelveHours}`;
+            break;
+          }
+          case 3: {
+            // quarter past
+            this.setActiveElement("quarter");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `quarter past ${twelveHours}`;
+            break;
+          }
+          case 4: {
+            // 20 past
+            this.setActiveElement("twenty");
+            this.setActiveElement("minutes");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `twenty minutes past ${twelveHours}`;
+            break;
+          }
+          case 5: {
+            // 25 past
+            this.setActiveElement("twenty");
+            this.setActiveElement("five");
+            this.setActiveElement("minutes");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `twenty five minutes past ${twelveHours}`;
+            break;
+          }
+          case 6: {
+            //half past
+            this.setActiveElement("half");
+            this.setActiveElement("past");
+            this.setActiveElement(this.hourIds[twelveHours]);
+            ariaLabel += `half past ${twelveHours}`;
+            break;
+          }
+          case 7: {
+            //25 to
+            this.setActiveElement("twenty");
+            this.setActiveElement("five");
+            this.setActiveElement("minutes");
+            this.setActiveElement("to");
+            this.setActiveElement(this.hourIds[nextHour]);
+            ariaLabel += `twenty five minutes to ${nextHour}`;
+            break;
+          }
+          case 8: {
+            //20 to 
+            this.setActiveElement("twenty");
+            this.setActiveElement("minutes");
+            this.setActiveElement("to");
+            this.setActiveElement(this.hourIds[nextHour]);
+            ariaLabel += `twenty minutes to ${nextHour}`;
+            break;
+          }
+          case 9: {
+            //quarter to 
+            this.setActiveElement("quarter");
+            this.setActiveElement("to");
+            this.setActiveElement(this.hourIds[nextHour]);
+            ariaLabel += `quarter to ${nextHour}`;
+            break;
+          }
+          case 10: {
+            //ten to 
+            this.setActiveElement("ten");
+            this.setActiveElement("minutes");
+            this.setActiveElement("to");
+            this.setActiveElement(this.hourIds[nextHour]);
+            ariaLabel += `ten minutes to ${nextHour}`;
+            break;
+          }
+          case 11: {
+            //five to 
+            this.setActiveElement("five");
+            this.setActiveElement("minutes");
+            this.setActiveElement("to");
+            this.setActiveElement(this.hourIds[nextHour]);
+            ariaLabel += `five minutes to ${nextHour}`;
+            break;
+          }
+          case 0:
+          default: {
+            this.setActiveElement(this.hourIds[twelveHours]);
+            this.setActiveElement("oclock");
+            ariaLabel += `${twelveHours} oclock`;
+            break;
+          }
+        }
+
+        clockFace.ariaLabel = ariaLabel;
+
+        this.timer = setTimeout(() => this.setTime(), this.oneMinute);
+
+      }
+    }
+
+    customElements.define('word-clock', WordClock);
+  </script>
+
+</body>
+
+</html>
