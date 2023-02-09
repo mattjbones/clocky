@@ -45,6 +45,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      font-family: 'Times New Roman', Times, serif;
     }
 
     .clock-container {
@@ -54,16 +55,73 @@
       font-size: calc(16px + 1.6vw + 1.2vh);
       /* font-size: calc(16px + 1.6cqw + 1.3cqh); */
     }
+
+    .lang-toggle {
+      position: fixed;
+      top: 10;
+      right: 10;
+      background-color: var(--text-color);
+      background-blend-mode: darken;
+      color: var(--inactive-text-color);
+      font-size: 20px;
+      border-radius: 2px;
+    }
+
+    button,
+    button:focus {
+      outline: none;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    button:active {
+      outline: none;
+      background: transparent;
+      border: 1px solid grey;
+    }
   </style>
 </head>
 
 <body>
+  <button id="lang-toggle" class="lang-toggle">Switch language</button>
 
-  <div class="clock-container">
-    <word-clock />
-  </div>
+  <template id="word-clock-english">
+    <div class="clock-container">
+      <word-clock />
+    </div>
+  </template>
 
-  <template id="world-clock-template">
+  <template id="word-clock-spanish">
+    <div class="clock-container">
+      <word-clock>
+        <span slot="it">son</span>
+        <span slot="is">las</span>
+        <span slot="twenty">viente</span>
+        <span slot="five">cinco</span>
+        <span slot="ten">diez</span>
+        <span slot="minutes">minutos</span>
+        <span slot="quarter">cuarto</span>
+        <span slot="half">media</span>
+        <span slot="past">pasado</span>
+        <span slot="to">a</span>
+        <span slot="one">uno</span>
+        <span slot="two">dos</span>
+        <span slot="three">tres</span>
+        <span slot="four">cuarto</span>
+        <span slot="five">cinco</span>
+        <span slot="six">seis</span>
+        <span slot="seven">siete</span>
+        <span slot="eight">ocho</span>
+        <span slot="nine">nueve</span>
+        <span slot="ten-hour">diez</span>
+        <span slot="eleven">once</span>
+        <span slot="twelve">doce</span>
+        <span slot="oclock">en punto</span>
+      </word-clock>
+    </div>
+  </template>
+
+  <template id="word-clock-template">
     <p id="clock-face">
       <span id="it" class="active">
         <slot name="it">IT</slot>
@@ -72,7 +130,7 @@
         <slot name="is">IS</slot>
       </span>
       <span id="twenty">
-        <slot name="ten">TWENTY</slot>
+        <slot name="twenty">TWENTY</slot>
       </span>
       <span id="five">
         <slot name="five">FIVE</slot>
@@ -108,7 +166,7 @@
         <slot name="four">FOUR</slot>
       </span>
       <span id="five-hour">
-        <slot name="five">FIVE</slot>
+        <slot name="five-hour">FIVE</slot>
       </span>
       <span id="six">
         <slot name="six">SIX</slot>
@@ -123,7 +181,7 @@
         <slot name="nine">NINE</slot>
       </span>
       <span id="ten-hour">
-        <slot name="ten">TEN</slot>
+        <slot name="ten-hour">TEN</slot>
       </span>
       <span id="eleven">
         <slot name="eleven">ELEVEN</slot>
@@ -204,7 +262,7 @@
       oneMinute = 60 * 1000
 
       connectedCallback() {
-        const template = document.getElementById('world-clock-template').content;
+        const template = document.getElementById('word-clock-template').content;
         const shadowRoot = this.attachShadow({ mode: "open" });
         shadowRoot.appendChild(template.cloneNode(true));
         this.setTime();
@@ -356,6 +414,17 @@
     }
 
     customElements.define('word-clock', WordClock);
+
+
+    const templated = ["word-clock-english", "word-clock-spanish"];
+    let isFirst = true;
+
+    document.body.appendChild(document.getElementById(templated[0]).content.cloneNode(true));
+    document.getElementById("lang-toggle").addEventListener('click', () => {
+      isFirst = !isFirst;
+      document.querySelectorAll(".clock-container").forEach((el) => document.body.removeChild(el));
+      document.body.appendChild(document.getElementById(templated[isFirst ? 0 : 1]).content.cloneNode(true));
+    });
   </script>
 
 </body>
