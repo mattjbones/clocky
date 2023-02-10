@@ -249,6 +249,7 @@
 
       skippable = ["it", "is"]
       hourIds = [
+        "",
         "one",
         "two",
         "three",
@@ -299,7 +300,7 @@
         });
 
         const twelveHours = hours > 12 ? hours - 12 : hours;
-        const nextHour = twelveHours + 1 > 12 ? 0 : twelveHours + 1;
+        const nextHour = twelveHours + 1 > 12 ? 1 : twelveHours + 1;
 
         let ariaLabel = "it is ";
         switch (minuteSection) {
